@@ -19,6 +19,9 @@ RUN a2enmod rewrite
 # Copia los archivos al contenedor
 COPY . /var/www/html
 
+# Copia la configuración personalizada de Apache
+COPY ./apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
 
@@ -34,3 +37,6 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Expone el puerto 80
 EXPOSE 80
+
+# Ejecuta Apache en primer plano
+CMD ["apache2-foreground"]
