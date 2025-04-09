@@ -1,7 +1,7 @@
-# Usa una imagen base oficial de PHP con Composer
-FROM composer:latest
+# Usa una imagen oficial de PHP con Apache
+FROM php:8.2-apache
 
-# Instala dependencias del sistema necesarias para Laravel
+# Instala dependencias del sistema
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
@@ -13,20 +13,24 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
+# Habilita mod_rewrite en Apache
+RUN a2enmod rewrite
+
+# Copia los archivos al contenedor
+COPY . /var/www/html
+
 # Establece el directorio de trabajo
-WORKDIR /var/www
+WORKDIR /var/www/html
 
-# Copia los archivos del proyecto
-COPY . .
+# Da permisos adecuados
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# Instala dependencias de Laravel
+# Instala Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Instala las dependencias PHP (sin las de desarrollo)
 RUN composer install --no-dev --optimize-autoloader
 
-# Asigna permisos a la carpeta storage y bootstrap
-RUN chmod -R 755 storage && chmod -R 755 bootstrap
-
-# Expone el puerto 8000
-EXPOSE 8000
-
-# Comando por defecto para ejecutar Laravel
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Expone el puerto 80
+EXPOSE 80
