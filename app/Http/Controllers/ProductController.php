@@ -113,5 +113,9 @@ public function actualizarImagen(Request $request, $codigo, GoogleSheetService $
 
     return redirect()->route('buscar.manual')->with('error', 'Producto no encontrado');
 }
+public function agregar()
+{
+    return view('agregar'); // Aquí puedes retornar la vista que desees
+}
 
 }
