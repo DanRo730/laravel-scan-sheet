@@ -19,9 +19,6 @@ RUN a2enmod rewrite
 # Copia los archivos al contenedor
 COPY . /var/www/html
 
-# Copia la configuración personalizada de Apache
-COPY ./apache/000-default.conf /etc/apache2/sites-available/000-default.conf
-
 # Establece el directorio de trabajo
 WORKDIR /var/www/html
 
