@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'google' => [
+    'service' => json_decode(env('GOOGLE_SERVICE_ACCOUNT_JSON'), true),
+    ],
+
 ];
